@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>URL Shortner</title>
+    </head>
+    <style>
+        table,
+        tr,
+        th,
+        td {
+            border: 1px solid black;
+        }
+        th,
+        td {
+            margin: 15px;
+            padding: 15px;
+            text-align: center;
+        }
+    </style>
+    <body>
+        <h1>URL Shortner</h1>
+
+        <% if (locals.shortId) { %>
+        <h3>
+            Shorted Your ID:
+            <a
+                href="http://localhost:8001/url/<%= locals.shortId %>"
+                target="_blank"
+                ><%= locals.shortId %></a
+            >
+        </h3>
+        <% } %>
+
+        <form method="post" action="/url">
+            <label for="redirectURL">Enter original URL: </label>
+            <input
+                type="text"
+                name="url"
+                id="redirectURL"
+                placeholder="https://www.example.com"
+            />
+            <!-- Because in the controller we are accessing the value of url using req.body.url we need to put the name as 'url' -->
+            <button>Submit</button>
+        </form>
+
+        <h2>Traffic Analytics</h2>
+
+        <table>
+            <thead>
+                <th>ShortID</th>
+                <th>Redirect Link</th>
+                <th>Clicks</th>
+            </thead>
+
+            <tbody>
+                <% locals.allUrls.forEach(url => { %>
+                <tr>
+                    <td><%= url.shortId %></td>
+                    <td><%= url.redirectURL %></td>
+                    <td><%= url.visitHistory.length %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </body>
+</html>

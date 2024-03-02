@@ -3,6 +3,8 @@ const Url = require("../models/url");
 
 const handleGenerateShortURL = async (req, res) => {
     const body = req.body;
+    const currUser = req.user;
+
     if (!body.url) {
         return res.status(400).json({ Err: "URL is required" });
     }
@@ -13,9 +15,10 @@ const handleGenerateShortURL = async (req, res) => {
         shortId: shortId,
         redirectURL: body.url,
         visitHistory: [],
+        createdBy: currUser._id,
     });
 
-    const allUrls = await Url.find({});
+    const allUrls = await Url.find({ createdBy: currUser._id });
     return res.render("home", {
         shortId,
         allUrls,

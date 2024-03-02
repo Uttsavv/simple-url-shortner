@@ -1,11 +1,13 @@
-const uuidToUserMap = new Map();
+const jwt = require("jsonwebtoken");
+const secretKey = "#123123UtsavSingh@yoyo";
 
-const setUser = (id, user) => {
-    uuidToUserMap.set(id, user);
+const setUser = (user) => {
+    const payload = { _id: user._id, email: user.email };
+    return jwt.sign(payload, secretKey);
 };
 
-const getUser = (id) => {
-    return uuidToUserMap.get(id);
+const getUser = (token) => {
+    return jwt.verify(token, secretKey);
 };
 
 module.exports = {

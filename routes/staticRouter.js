@@ -9,4 +9,12 @@ router.get("/", async (req, res) => {
     });
 });
 
+router.get("/user/signup", (req, res) => {
+    return res.render("signup");
+});
+
+router.get("/user/login", (req, res) => {
+    return res.render("login");
+});
+
 module.exports = router;

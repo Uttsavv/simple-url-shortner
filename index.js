@@ -4,9 +4,11 @@ const path = require("path");
 const app = express();
 const PORT = 8001;
 
+const connMongoDB = require("./connections.js");
+
 const urlRouter = require("./routes/url");
 const staticRouter = require("./routes/staticRouter.js");
-const connMongoDB = require("./connections.js");
+const userRouter = require("./routes/user.js");
 
 //conn
 connMongoDB("mongodb://127.0.0.1:27017/shortURLs").then(() =>
@@ -23,6 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //Routing
 app.use("/url", urlRouter);
+app.use("/user", userRouter);
 app.use("/", staticRouter);
 
 //server start

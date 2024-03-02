@@ -1,17 +1,27 @@
 const { getUser } = require("../services/auth");
 
-const restrictToLoggedInUser = (req, res, next) => {
+const checkAuthentication = (req, res, next) => {
     const token = req.cookies?.token;
-
-    if (!token) return res.redirect("/user/login");
+    req.user = null;
+    if (!token) return next();
 
     const currUser = getUser(token);
-    if (!currUser) return res.redirect("/user/login");
-
     req.user = currUser;
-    next();
+
+    return next();
+};
+
+const restrictToRole = (roles = []) => {
+    return (req, res, next) => {
+        if (!req.user) return res.redirect("/user/login");
+
+        if (!roles.includes(req.user.role)) return res.end("Not Authorized");
+
+        return next();
+    };
 };
 
 module.exports = {
-    restrictToLoggedInUser,
+    checkAuthentication,
+    restrictToRole,
 };

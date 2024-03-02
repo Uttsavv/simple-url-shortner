@@ -10,11 +10,14 @@ const connMongoDB = require("./connections.js");
 const urlRouter = require("./routes/url");
 const staticRouter = require("./routes/staticRouter.js");
 const userRouter = require("./routes/user.js");
-const { restrictToLoggedInUser } = require("./middlewares/auth.js");
+const {
+    checkAuthentication,
+    restrictToRole,
+} = require("./middlewares/auth.js");
 
 //conn
 connMongoDB("mongodb://127.0.0.1:27017/shortURLs").then(() =>
-    console.log("Connected to monogodb")
+    console.log("Connected to MongoDB")
 );
 
 //EJS Setup
@@ -25,9 +28,10 @@ app.set("views", path.resolve("./views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(checkAuthentication);
 
 //Routing
-app.use("/url", restrictToLoggedInUser, urlRouter);
+app.use("/url", restrictToRole(["NORMAL", "ADMIN"]), urlRouter);
 app.use("/user", userRouter);
 app.use("/", staticRouter);
 

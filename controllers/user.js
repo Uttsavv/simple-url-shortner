@@ -6,7 +6,8 @@ const handleUserSignUp = async (req, res) => {
 
     const newUser = await User.create({ name, email, password });
 
-    return res.status(201).redirect("/url");
+    req.user = newUser;
+    return res.status(201).redirect("/user/login");
 };
 
 const handleUserLogin = async (req, res) => {
